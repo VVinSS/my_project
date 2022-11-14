@@ -2,25 +2,27 @@ import gulp from "gulp";
 import del from "del";
 import autoprefixer from "autoprefixer";
 import rename from "gulp-rename";
-import include from "gulp-format-html";
+import include from "gulp-file-include";
 import plumber from "gulp-plumber";
 import formatHtml from "gulp-format-html";
 import less from "gulp-less";
 import postcss from "gulp-postcss";
-import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
 import minify from "gulp-csso";
-import rename from "gulp-rename";
 import terser from "gulp-terser";
+import imagemin from "gulp-imagemin";
 import imagemin_mozjpeg from "imagemin-mozjpeg";
 import imagemin_optipng from "imagemin-optipng";
 import imagemin_gifsicle from "imagemin-gifsicle";
 import svgmin from "gulp-svgmin";
 import svgstore from "gulp-svgstore";
 
+import server from "browser-sync";
+
 const resources = {
     html: "src/html/**/*.html",
     less: "src/styles/**/*.less",
+    jsDev: "src/scripts/dev/**/*.js",
     jsVendor: "src/scripts/vendor/**/*.js",
     static: [
         "src/assets/icons/**/*.*",
@@ -149,3 +151,37 @@ const build = gulp.series(
     images,
     svgSprite
 );
+
+function reloadServer(done) {
+    server.reload();
+    done();
+}
+
+function serve() {
+    server.init({
+        server: "dist"
+    });
+    gulp.watch(resources.html, gulp.series(includeHtml, reloadServer));
+    gulp.watch(resources.less, gulp.series(style, reloadServer));
+    gulp.watch(resources.jsDev, gulp.series(style, reloadServer));
+    gulp.watch(resources.jsVendor, gulp.series(js, reloadServer));
+    gulp.watch(resources.static, { delay: 500 }, gulp.series(copy, reloadServer));
+    gulp.watch(resources.images, { delay: 500 }, gulp.series(images, reloadServer));
+    gulp.watch(resources.svgSprite, gulp.series(svgSprite, reloadServer));
+}
+
+const start = gulp.series(build, serve);
+
+export {
+    clean,
+    copy,
+    includeHtml,
+    style,
+    js,
+    jsCopy,
+    images,
+    svgSprite,
+    build,
+    serve,
+    start
+};
