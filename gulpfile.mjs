@@ -16,7 +16,6 @@ import imagemin_optipng from "imagemin-optipng";
 import imagemin_gifsicle from "imagemin-gifsicle";
 import svgmin from "gulp-svgmin";
 import svgstore from "gulp-svgstore";
-
 import server from "browser-sync";
 
 const resources = {
@@ -35,7 +34,7 @@ const resources = {
     ],
     images: "src/assets/images/**/*.(png, jpg, jpeg, webp, gif, svg)",
     svgSprite: "src/assets/svg-sprite/*.svg"
-}
+};
 
 function clean() {
     return del("dist");
