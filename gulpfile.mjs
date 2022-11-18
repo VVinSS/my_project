@@ -32,7 +32,7 @@ const resources = {
         "src/json/**/*.json",
         "src/php/**/*.php"
     ],
-    images: "src/assets/images/**/*.(png, jpg, jpeg, webp, gif, svg)",
+    images: "src/assets/images/**/*.{png, jpg, jpeg, webp, gif, svg}",
     svgSprite: "src/assets/svg-sprite/*.svg"
 };
 
@@ -162,8 +162,8 @@ function serve() {
     });
     gulp.watch(resources.html, gulp.series(includeHtml, reloadServer));
     gulp.watch(resources.less, gulp.series(style, reloadServer));
-    gulp.watch(resources.jsDev, gulp.series(style, reloadServer));
-    gulp.watch(resources.jsVendor, gulp.series(js, reloadServer));
+    gulp.watch(resources.jsDev, gulp.series(js, reloadServer));
+    gulp.watch(resources.jsVendor, gulp.series(jsCopy, reloadServer));
     gulp.watch(resources.static, { delay: 500 }, gulp.series(copy, reloadServer));
     gulp.watch(resources.images, { delay: 500 }, gulp.series(images, reloadServer));
     gulp.watch(resources.svgSprite, gulp.series(svgSprite, reloadServer));
